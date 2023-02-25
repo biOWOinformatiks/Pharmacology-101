@@ -1,0 +1,21 @@
+import numpy as np
+from scipy.optimize import curve_fit
+
+# Define the saturation binding equation to fit
+def binding_equation(x, bmax, kd):
+    return (bmax * x) / (kd + x)
+
+# Define the experimental data as numpy arrays
+xdata = np.array([0.1, 0.5, 1.0, 2.0, 5.0, 10.0])
+ydata = np.array([0.5, 1.8, 3.3, 6.0, 14.0, 28.0])
+
+# Fit the data to the saturation binding equation using curve_fit()
+popt, pcov = curve_fit(binding_equation, xdata, ydata)
+
+# Define the Kd and Bmax values
+kd = popt[1]
+bmax = popt[0]
+
+# Print the results
+print('Kd:', kd)
+print('Bmax:', bmax)
