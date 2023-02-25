@@ -1,0 +1,99 @@
+```import numpy as np
+
+
+
+# Specific activity of [3H]-spiperone
+
+specific_activity = 25530  # dpm/pmol
+
+
+
+# Mean data for non-specific binding (in dpm)
+
+nsb_dpm = np.array([604.6, 360.8, 189, 155.2, 128.7, 114.2, 97.6, 86.1])
+
+
+
+# Mean data for total binding (in dpm)
+
+tb_dpm = np.array([2336.8, 1942.9, 1582.6, 1425.3, 942.1, 547.5, 275.1, 195.5])
+
+
+
+# Mean DPM MAX data for each [3H]-spiperone concentration
+
+dpm_max = np.array([34352.8, 17629.2, 9121.5, 4926.9, 2222.8, 1171.8, 547.6, 379])
+
+
+
+# Dilution series of [3H]-spiperone concentrations
+
+spiperone_conc = np.array([20, 10, 5, 2.5, 1.25, 0.6, 0.3, 0.15])  # nM
+
+
+
+# Protein concentration of the membrane preparation (in mg/mL)
+
+protein_conc = 0.025  # mg/mL
+
+
+
+# Volume of each assay tube (in mL)
+
+volume_ml = 1
+
+
+
+# Convert from dpm to pmol/mg for the mean data of total and non-specific binding
+
+nsb_pmol_mg = nsb_dpm / specific_activity / protein_conc
+
+tb_pmol_mg = tb_dpm / specific_activity / protein_conc
+
+
+
+# Calculate specific binding for each [3H]-spiperone concentration
+
+specific_binding_pmol_mg = tb_pmol_mg - nsb_pmol_mg
+
+
+
+# Calculate the amount of [3H]-spiperone (in pmol) in each dilution triplicate
+
+spiperone_pmol = dpm_max / specific_activity
+
+
+
+# Calculate the concentration of [3H]-spiperone in each assay tube (in M)
+
+spiperone_conc_molar = spiperone_pmol / (volume_ml * 1e-3 * 1e-12)  # convert from pmol to mol
+
+
+
+# Express the spiperone concentration in standard form
+
+spiperone_conc_std = np.log10(spiperone_conc_molar)
+
+exponents = np.floor(spiperone_conc_std)
+
+mantissas = spiperone_conc_molar / 10**exponents
+
+mantissas_str = [f"{x:.2f}" for x in mantissas]  # format mantissas to 2 decimal places
+
+spiperone_conc_std_str = [f"{mantissas_str[i]}e{int(exponents[i]):+d}" for i in range(len(spiperone_conc_std))]
+
+
+
+# Print the results
+
+print("Non-specific binding (pmol/mg):", nsb_pmol_mg)
+
+print("Total binding (pmol/mg):", tb_pmol_mg)
+
+print("Specific binding (pmol/mg):", specific_binding_pmol_mg)
+
+print("Amount of [3H]-spiperone (pmol):", spiperone_pmol)
+
+print("Spiperone concentration (M):", spiperone_conc_molar)
+
+print("Spiperone concentration (standard form):", spiperone_conc_std_str)
