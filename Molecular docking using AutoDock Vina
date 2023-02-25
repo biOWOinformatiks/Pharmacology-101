@@ -1,0 +1,31 @@
+import os
+from AutoDockTools import *
+
+# Define the receptor and ligand files as PDBQT format
+receptor_file = 'receptor.pdbqt'
+ligand_file = 'ligand.pdbqt'
+
+# Load the receptor and ligand molecules using AutoDockTools
+receptor = Read(receptor_file)
+ligand = Read(ligand_file)
+
+# Define the docking parameters
+params = {
+    'center_x': 0.0,
+    'center_y': 0.0,
+    'center_z': 0.0,
+    'size_x': 20.0,
+    'size_y': 20.0,
+    'size_z': 20.0,
+    'exhaustiveness': 8,
+    'num_modes': 9
+}
+
+# Run the molecular docking using AutoDock Vina
+vina = AutoDockTools.Vina()
+results = vina.dock(receptor, ligand, params)
+
+# Print the results
+for result in results:
+    print('Ligand pose energy: ', result.energy)
+    print('Ligand pose coordinates: ', result.coords)
