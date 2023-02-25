@@ -1,0 +1,23 @@
+from rdkit import Chem
+from rdkit.Chem import AllChem, Draw
+
+# Define the query molecule as a SMILES string
+query_mol = Chem.MolFromSmiles('Cc1cc(C(=O)NCCCCC(=O)O)cc(c1OC)C')
+
+# Load a database of compounds to screen
+db_file = 'compound_database.sdf'
+suppl = Chem.SDMolSupplier(db_file)
+
+# Define a list to store hits
+hits = []
+
+# Loop through the compounds in the database and compare to the query molecule
+for mol in suppl:
+    if mol is not None:
+        if AllChem.GetBestRMS(AllChem.GetAlignmentTransform(query_mol, mol),
+                              query_mol, mol) < 1.0:
+            hits.append(mol)
+
+# Visualize the hits using a 2D structure diagram
+img = Draw.MolsToGridImage(hits, molsPerRow=5, subImgSize=(200,200))
+img.save('hits.png')
