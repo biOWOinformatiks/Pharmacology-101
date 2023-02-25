@@ -1,0 +1,26 @@
+import numpy as np
+from scipy.optimize import curve_fit
+import matplotlib.pyplot as plt
+
+# Define the dose-response function to fit
+def hill_equation(x, a, b, c, d):
+    return d + (a - d) / (1.0 + (x/c)**b)
+
+# Define the experimental data as numpy arrays
+xdata = np.array([0.01, 0.1, 1.0, 10.0, 100.0])
+ydata = np.array([0.25, 0.5, 0.75, 0.9, 0.95])
+
+# Fit the data to the hill equation using curve_fit()
+popt, pcov = curve_fit(hill_equation, xdata, ydata, p0=[1.0, 1.0, 1.0, 1.0])
+
+# Generate a dose-response curve using the fitted parameters
+curve_x = np.logspace(-2, 3, 100)
+curve_y = hill_equation(curve_x, *popt)
+
+# Plot the experimental data and fitted curve
+plt.semilogx(xdata, ydata, 'ko', label='Experimental data')
+plt.semilogx(curve_x, curve_y, 'r-', label='Fitted curve')
+plt.legend()
+plt.xlabel('Dose (log10)')
+plt.ylabel('Response')
+plt.show()
