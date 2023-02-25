@@ -1,0 +1,24 @@
+import pymol
+
+# Load a protein-ligand complex into PyMOL
+pymol.cmd.load('1ubq_ligand.pdb')
+pymol.cmd.load('1ubq_protein.pdb')
+
+# Select the ligand and protein residues within 4 angstroms of the ligand
+pymol.cmd.select('ligand', 'resn LIG')
+pymol.cmd.select('binding_site', 'byres (ligand around 4)')
+
+# Color the ligand and binding site residues
+pymol.cmd.color('yellow', 'ligand')
+pymol.cmd.color('cyan', 'binding_site')
+
+# Calculate the interaction energy between the ligand and binding site residues
+pymol.cmd.select('ligand_atoms', 'byres ligand')
+pymol.cmd.select('binding_site_atoms', 'byres binding_site')
+energy = pymol.cmd.evaluate('ebind(ligand_atoms, binding_site_atoms)')
+
+# Print the interaction energy to the console
+print('Interaction energy:', energy)
+
+# Save a PNG image of the protein-ligand complex
+pymol.cmd.png('1ubq_ligand.png', 2000, 2000, dpi=300)
